@@ -56,7 +56,7 @@ resource "google_compute_instance" "vm" {
 
   boot_disk {
     initialize_params {
-      image = module.gce-container.source_image
+      image = "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/images/cos-stable-105-17412-156-5"
     }
   }
 
@@ -77,7 +77,7 @@ resource "google_compute_instance" "vm" {
   }
 
   labels = {
-    container-vm = module.gce-container.vm_container_label
+    container-vm = "cos-stable-105-17412-156-5"
   }
 
   service_account {
