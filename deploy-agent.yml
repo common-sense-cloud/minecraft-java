@@ -1,0 +1,37 @@
+- name: Run Grafana Agent Docker
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Create Agent directories
+      ansible.builtin.file:
+        path: /etc/agent/data
+        state: directory
+        recurse: yes
+        owner: kmaus
+        mode: '0755'
+
+    - name: Copy local agent-config.yaml to host
+      ansible.builtin.copy:
+        src: ./agent-config.yaml
+        dest: /etc/agent/agent.yaml
+        follow: yes
+    
+    - name: Pull grafana image
+      docker_image:
+        name: grafana/agent:v0.36.0
+        source: pull
+
+    - name: Ensure Container is running
+      docker_container:
+        name: grafana-agent
+        image: "grafana/agent:v0.36.0"
+        state: started
+        restart_policy: always
+        restart: yes
+        command: ["-server.http.address=0.0.0.0:12345", "-config.file=/etc/agent/agent.yaml"]
+        volumes:
+          - /etc/agent/data:/etc/agent/data
+          - /etc/agent/agent.yaml:/etc/agent/agent.yaml
+          - /var/log/:/var/log/hostlog
+          - /var/lib/docker/volumes/8d843215dabc278f5cc9ff6330a771764b4c60601eb93457afe1cd537ad58516/_data/logs/:/var/log/mclogs
