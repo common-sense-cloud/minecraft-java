@@ -9,6 +9,14 @@ locals {
   }]
 }
 
+resource "google_compute_disk" "pd" {
+  project = var.project_id
+  name    = "mc-data-disk"
+  type    = "pd-ssd"
+  zone    = var.zone
+  size    = 10
+}
+
 module "gce-container" {
   source  = "terraform-google-modules/container-vm/google"
   version = "~> 2.0"
@@ -27,8 +35,13 @@ module "gce-container" {
 
     volumeMounts = [
       {
-        mountPath = "/data"
-        name      = "mcdata"
+        mountPath = "/cache"
+        name      = "tempfs-0"
+        readOnly  = false
+      },
+      {
+        mountPath = "/persistent-data"
+        name      = "data-disk-0"
         readOnly  = false
       },
     ]
@@ -36,10 +49,18 @@ module "gce-container" {
 
   volumes = [
     {
-      name = "mcdata"
+      name = "tempfs-0"
 
       emptyDir = {
         medium = "Memory"
+      }
+    },
+    {
+      name = "data-disk-0"
+
+      gcePersistentDisk = {
+        pdName = "data-disk-0"
+        fsType = "ext4"
       }
     },
   ]
@@ -49,15 +70,23 @@ module "gce-container" {
 }
 
 resource "google_compute_instance" "vm" {
-  project      = var.project_id
-  name         = "mc-server-v1"
-  machine_type = "n1-standard-1"
-  zone         = var.zone
+  project                   = var.project_id
+  name                      = "mc-server-v1"
+  machine_type              = "e2-standard-2"
+  zone                      = var.zone
+  allow_stopping_for_update = true
 
   boot_disk {
     initialize_params {
-      image = module.gce-container.source_image
+      image = "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/images/cos-stable-105-17412-156-5"
     }
+    auto_delete = false
+  }
+
+  attached_disk {
+    source      = google_compute_disk.pd.self_link
+    device_name = "data-disk-0"
+    mode        = "READ_WRITE"
   }
 
   network_interface {
@@ -77,7 +106,7 @@ resource "google_compute_instance" "vm" {
   }
 
   labels = {
-    container-vm = module.gce-container.vm_container_label
+    container-vm = "ubuntu-2004-lts"
   }
 
   service_account {

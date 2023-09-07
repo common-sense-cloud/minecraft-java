@@ -23,12 +23,15 @@
 - ~~Add new VPC network and subnets/firewall rules to terraform code, so it's not running in default network~~
 - ~~Convert Functions from JS to Python~~
 - Add monitoring/logging
+- Set up alerting via grafana
 - Figure out SSO auth so firewall rules don't need to be modified
 - ~~Add autoshutdown scripts~~
-- Add server automated backups
+- ~~Add server automated backups~~
 - Migrate to K8s/GKE ($$$$)
 - Migrate state from local to GCS
-- Enable soft shutdown of MC server to not lose player inventory
+- ~~Scale up instance size to 2 vCPU and 8GB memory~~
+- ~~Enable soft shutdown of MC server to not lose player inventory~~
+- Add github actions workflow to lint, verify and plan/apply Terraform on PR
 
 
 ## Contributing:
