@@ -12,7 +12,7 @@
 - Run a `terraform init` in the root directory of the project
 - Run `terraform plan` and ensure 10 resources are being created
 - Run `terraform apply` and enter `yes` when prompted to build the resources
-- Copy the add function URL and run `curl <function-url>` in your terminal
+- Copy the add function URL and run `curl -4 <function-url>` in your terminal
   - *NOTE: This is a workaround to force IPV4 and actually work*
 - Open minecraft java and join the LAN server with the GCE VMs public IP address
 
