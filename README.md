@@ -12,8 +12,8 @@
 - Run a `terraform init` in the root directory of the project
 - Run `terraform plan` and ensure 10 resources are being created
 - Run `terraform apply` and enter `yes` when prompted to build the resources
-- Run the add-user function to add your IP address to the firewall rule
-  - *note: If you use IPv6 you will need to enter your IPv4 address manually, if you know a solution to this please feel free to open a PR!*
+- Copy the add function URL and run `curl <function-url>` in your terminal
+  - *NOTE: This is a workaround to force IPV4 and actually work*
 - Open minecraft java and join the LAN server with the GCE VMs public IP address
 
 ## Action Items:
@@ -22,7 +22,7 @@
 - Add Firewall rule cleanup step to stop-server function
 - ~~Add new VPC network and subnets/firewall rules to terraform code, so it's not running in default network~~
 - ~~Convert Functions from JS to Python~~
-- Add monitoring/logging
+- ~~Add monitoring/logging~~
 - Set up alerting via grafana
 - Figure out SSO auth so firewall rules don't need to be modified
 - ~~Add autoshutdown scripts~~
@@ -32,6 +32,7 @@
 - ~~Scale up instance size to 2 vCPU and 8GB memory~~
 - ~~Enable soft shutdown of MC server to not lose player inventory~~
 - Add github actions workflow to lint, verify and plan/apply Terraform on PR
+- Add github actions workflow to update minecraft version (restart docker container on release)
 
 
 ## Contributing:

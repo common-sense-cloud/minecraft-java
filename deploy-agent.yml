@@ -14,7 +14,7 @@
     - name: Copy local agent-config.yaml to host
       ansible.builtin.copy:
         src: ./agent-config.yaml
-        dest: /etc/agent/agent.yaml
+        dest: /etc/agent/agent-config.yaml
         follow: yes
     
     - name: Pull grafana image
@@ -29,9 +29,9 @@
         state: started
         restart_policy: always
         restart: yes
-        command: ["-server.http.address=0.0.0.0:12345", "-config.file=/etc/agent/agent.yaml"]
+        command: ["-server.http.address=0.0.0.0:12345", "-config.file=/etc/agent/agent-config.yaml"]
         volumes:
           - /etc/agent/data:/etc/agent/data
-          - /etc/agent/agent.yaml:/etc/agent/agent.yaml
+          - /etc/agent:/etc/agent
           - /var/log/:/var/log/hostlog
-          - /var/lib/docker/volumes/8d843215dabc278f5cc9ff6330a771764b4c60601eb93457afe1cd537ad58516/_data/logs/:/var/log/mclogs
+          - /var/lib/docker/volumes/1edde56cb574657f670f100154d5606fa51083f8bb0fdaa2876a2524fe3e58fa/_data/logs/:/var/log/mclogs
